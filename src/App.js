@@ -61,6 +61,7 @@ function App() {
   
     hideConfirmationModal();
     setId(null);
+    setShowAddTask(false)
   };
 
   const toggleReminder = async (id) => {
@@ -105,6 +106,7 @@ function App() {
     console.log("reminder", reminder);
 
     resetInputFields()
+    setShowAddTask(false)
   };
 
   const resetInputFields = () => {
@@ -134,12 +136,10 @@ function App() {
     });
   };
 
-  const task = () => {
-    return {
-      text: text,
-      day: day,
-      reminder: reminder,
-    }
+  const task = {
+    text: text,
+    day: day,
+    reminder: reminder,
   }
 
   const addTask = async () => {
@@ -149,7 +149,7 @@ function App() {
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify(task())
+      body: JSON.stringify(task)
     })
 
     const data = await res.json()
@@ -166,7 +166,7 @@ function App() {
       headers: {
         'Content-type': 'application/json'
       },
-      body: JSON.stringify(task())
+      body: JSON.stringify(task)
     })
     const data = await res.json()
     setTasks(tasks.map((task) => task.id === id ? {...task, text: data.text, day: data.day, reminder: data.reminder } : task))
@@ -203,13 +203,13 @@ function App() {
                     onSubmit={submitForm}
                   />
                 )}
-                <Tasks
+                {tasks.length > 0 ? <Tasks
                   tasks={tasks}
                   onEdit={clickEditTask}
                   onDelete={showDeleteModal}
                   onDoubleClick={toggleReminder}
-                />
-                <Link to="About">About</Link>
+                /> : 'No Task.'}
+                <p><Link to="About">About</Link></p>
               </>
             }
           />
